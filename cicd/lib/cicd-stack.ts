@@ -61,7 +61,7 @@ export class CicdStack extends cdk.Stack {
     const buildImageProjectName = "build-plugins-test-image"
     const buildImageSource = codebuild.Source.gitHub({
       owner: "funnel-io",
-      repo: "connector-plugins",
+      repo: "aws-codebuild-docker-images",
       webhook: true,
       webhookFilters: [
         codebuild.FilterGroup
@@ -70,7 +70,7 @@ export class CicdStack extends cdk.Stack {
           .andCommitMessageIs("^update image.*$")
       ],
       buildStatusContext: buildImageProjectName,
-      
+
     });
     const build_image_project = new codebuild.Project(this, buildImageProjectName, {
       projectName: buildImageProjectName,
