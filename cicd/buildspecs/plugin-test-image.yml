@@ -1,0 +1,19 @@
+version: 0.2
+
+env:
+  variables:
+    TAG_NAME: latest
+    REPO_NAME: plugins-test-image  # see buildImageECRRepoName in cicd-stack.ts
+
+phases:
+  pre_build:
+    commands:
+      - echo "prebuild"
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 028790571394.dkr.ecr.us-east-1.amazonaws.com
+
+  build:
+    commands:
+      - aws ecr describe-repositories --region us-east-1
+      - echo "docker build --tag plugin_face_quota_service ."
+      - echo "docker tag plugin_face_quota_service:latest 028790571394.dkr.ecr.us-east-1.amazonaws.com/plugin_face_quota_service:latest"
+      - echo "docker push 028790571394.dkr.ecr.us-east-1.amazonaws.com/plugin_face_quota_service:latest"
