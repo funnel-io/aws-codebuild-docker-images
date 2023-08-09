@@ -38,6 +38,7 @@ export class CicdStack extends cdk.Stack {
           "codeartifact:ReadFromRepository",
           "kms:*",
           "s3:*",
+          "ecr:DescribeRepositories",
           "secretsmanager:GetSecretValue"
         ],
         resources: ['*']
@@ -67,7 +68,6 @@ export class CicdStack extends cdk.Stack {
         codebuild.FilterGroup
           .inEventOf(codebuild.EventAction.PUSH)
           .andBranchIs("master")
-          .andCommitMessageIs("^update image.*$")
       ],
       buildStatusContext: buildImageProjectName,
 
