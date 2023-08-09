@@ -20,7 +20,7 @@ export class CicdStack extends cdk.Stack {
       repositoryName: buildImageECRRepoName,
       imageTagMutability: ecr.TagMutability.MUTABLE,
       autoDeleteImages: true,
-      removalPolicy: cdk.RemovalPolicy.RETAIN
+      removalPolicy: cdk.RemovalPolicy.DESTROY
     });
     buildImageRepo.grantPullPush(buildRole)
 
@@ -66,7 +66,7 @@ export class CicdStack extends cdk.Stack {
       webhookFilters: [
         codebuild.FilterGroup
           .inEventOf(codebuild.EventAction.PUSH)
-          .andBranchIs("build-test-image")
+          .andBranchIs("main")
           .andCommitMessageIs("^update image.*$")
       ],
       buildStatusContext: buildImageProjectName,
@@ -76,10 +76,10 @@ export class CicdStack extends cdk.Stack {
       projectName: buildImageProjectName,
       cache: codebuild.Cache.local(codebuild.LocalCacheMode.SOURCE),
       source: buildImageSource,
-      buildSpec: codebuild.BuildSpec.fromSourceFilename("cicd/buildspecs/build-image.yml"),
+      buildSpec: codebuild.BuildSpec.fromSourceFilename("cicd/buildspecs/plugin-test-image.yml"),
       role: buildRole,
       environment: {
-        buildImage: codebuild.LinuxBuildImage.STANDARD_5_0,
+        buildImage: codebuild.LinuxBuildImage.STANDARD_7_0,
         computeType: codebuild.ComputeType.MEDIUM
       }
     });
