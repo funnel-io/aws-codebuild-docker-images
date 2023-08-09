@@ -80,7 +80,8 @@ export class CicdStack extends cdk.Stack {
       role: buildRole,
       environment: {
         buildImage: codebuild.LinuxBuildImage.STANDARD_7_0,
-        computeType: codebuild.ComputeType.MEDIUM
+        computeType: codebuild.ComputeType.MEDIUM,
+        privileged: true,
       }
     });
   }
