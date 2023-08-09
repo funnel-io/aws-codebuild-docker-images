@@ -66,7 +66,7 @@ export class CicdStack extends cdk.Stack {
       webhookFilters: [
         codebuild.FilterGroup
           .inEventOf(codebuild.EventAction.PUSH)
-          .andBranchIs("main")
+          .andBranchIs("master")
           .andCommitMessageIs("^update image.*$")
       ],
       buildStatusContext: buildImageProjectName,
