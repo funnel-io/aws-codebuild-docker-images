@@ -2,18 +2,24 @@ version: 0.2
 
 env:
   variables:
+    BASE_TAG_NAME: base
     TAG_NAME: latest
     REPO_NAME: plugins-test-image  # see buildImageECRRepoName in cicd-stack.ts
 
 phases:
   pre_build:
     commands:
-      - echo "prebuild"
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 028790571394.dkr.ecr.us-east-1.amazonaws.com
 
   build:
     commands:
       - aws ecr describe-repositories --region us-east-1
-      - echo "docker build --tag plugin_face_quota_service ."
-      - echo "docker tag plugin_face_quota_service:latest 028790571394.dkr.ecr.us-east-1.amazonaws.com/plugin_face_quota_service:latest"
-      - echo "docker push 028790571394.dkr.ecr.us-east-1.amazonaws.com/plugin_face_quota_service:latest"
+      - cd ubuntu/standard/7.0
+      - echo "Building base image"
+      - docker build --tag $REPO_NAME:$BASE_TAG_NAME .
+      - docker tag $REPO_NAME:$BASE_TAG_NAME 028790571394.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:$BASE_TAG_NAME
+      - docker push 028790571394.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:$BASE_TAG_NAME
+      - echo "Building build image"
+      - docker build --tag $REPO_NAME:$TAG_NAME -f Dockerfile.funnel .
+      - docker tag $REPO_NAME:$TAG_NAME 028790571394.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:$TAG_NAME
+      - docker push 028790571394.dkr.ecr.us-east-1.amazonaws.com/$REPO_NAME:$TAG_NAME

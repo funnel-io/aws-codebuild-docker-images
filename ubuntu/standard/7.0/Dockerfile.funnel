@@ -1,0 +1,6 @@
+FROM 028790571394.dkr.ecr.us-east-1.amazonaws.com/plugins-test-image:base AS base
+
+RUN env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.8:latest 3.9:latest && rm -rf /tmp/*
+RUN pyenv global $(pyenv latest 3.8) $(pyenv latest 3.9) $(pyenv latest 3.11)
+
+ENTRYPOINT ["/usr/local/bin/dockerd-entrypoint.sh"]
