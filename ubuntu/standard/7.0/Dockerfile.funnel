@@ -111,11 +111,6 @@ RUN git clone https://github.com/tj/n $N_SRC_DIR \
 RUN curl https://pyenv.run | bash
 ENV PATH="/root/.pyenv/shims:/root/.pyenv/bin:$PATH"
 
-#go
-RUN git clone https://github.com/syndbg/goenv.git $HOME/.goenv
-ENV PATH="/root/.goenv/shims:/root/.goenv/bin:/go/bin:$PATH"
-ENV GOENV_DISABLE_GOPATH=1
-ENV GOPATH="/go"
 
 #=======================End of layer: tools  =================
 FROM tools AS runtimes
@@ -155,15 +150,6 @@ RUN set -ex \
     && pip3.11 uninstall cython --yes
 
 #**************** END PYTHON *****************************************************
-
-#****************     GOLANG     ****************************************************
-ENV GOLANG_20_VERSION="1.20.5"
-
-RUN goenv install $GOLANG_20_VERSION && rm -rf /tmp/* && \
-    goenv global  $GOLANG_20_VERSION && \
-    go env -w GO111MODULE=auto
-
-#****************      END GOLANG     *******************************
 
 #=======================End of layer: runtimes  =================
 
@@ -218,7 +204,6 @@ FROM runtimes_n_corretto AS std_v7
 # Activate runtime versions specific to image version.
 RUN n $NODE_18_VERSION
 RUN pyenv global $PYTHON_311_VERSION
-RUN goenv global $GOLANG_20_VERSION
 
 # Configure SSH
 COPY ssh_config /root/.ssh/config
