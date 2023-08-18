@@ -203,6 +203,7 @@ FROM runtimes_n_corretto AS std_v7
 
 # Activate runtime versions specific to image version.
 RUN n $NODE_18_VERSION
+RUN npm install -g npm
 RUN pyenv global $PYTHON_311_VERSION
 
 # Configure SSH
