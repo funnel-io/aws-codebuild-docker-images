@@ -148,6 +148,18 @@ RUN set -ex \
     && pip3.11 install --no-build-isolation "Cython<3" "PyYAML==$PYYAML_VERSION" \
     && pip3.11 install --no-cache-dir --upgrade 'setuptools==67.7.2' aws-sam-cli boto3 pipenv virtualenv \
     && pip3.11 uninstall cython --yes
+RUN set -ex \
+    && pip3.8 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
+    && pip3.8 install wheel \
+    && pip3.8 install --no-build-isolation "Cython<3" "PyYAML==$PYYAML_VERSION" \
+    && pip3.8 install --no-cache-dir --upgrade 'setuptools==67.7.2' aws-sam-cli boto3 pipenv virtualenv \
+    && pip3.8 uninstall cython --yes
+RUN set -ex \
+    && pip3.9 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
+    && pip3.9 install wheel \
+    && pip3.9 install --no-build-isolation "Cython<3" "PyYAML==$PYYAML_VERSION" \
+    && pip3.9 install --no-cache-dir --upgrade 'setuptools==67.7.2' aws-sam-cli boto3 pipenv virtualenv \
+    && pip3.9 uninstall cython --yes
 
 #**************** END PYTHON *****************************************************
 
@@ -204,7 +216,6 @@ FROM runtimes_n_corretto AS std_v7
 # Activate runtime versions specific to image version.
 RUN n $NODE_18_VERSION
 RUN npm install -g npm
-RUN pyenv global $PYTHON_311_VERSION
 
 # Configure SSH
 COPY ssh_config /root/.ssh/config
